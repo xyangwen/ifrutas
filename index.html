@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>iFrutas - As Melhores Frutas do Rio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #ea1d2c;
@@ -13,15 +13,21 @@
             --text: #3e3e3e;
             --text-light: #717171;
             --white: #ffffff;
-            --shadow: 0 2px 8px rgba(0,0,0,0.1);
-            --radius: 8px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --radius: 12px;
+            --success: #50a773;
+            --transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
 
-        /* --- Header & Endereço --- */
+        /* --- Animations --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* --- Header & Search --- */
         header {
             background: var(--white);
             padding: 15px 20px;
@@ -29,247 +35,197 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .location-bar {
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 
-        .location-label { font-size: 0.8rem; color: var(--primary); font-weight: bold; text-transform: uppercase; margin-bottom: 2px; }
-        .location-address { font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 90vw; }
-        .location-address::after { content: '▼'; font-size: 0.7rem; color: var(--primary); margin-left: 5px; }
+        .location-bar { cursor: pointer; display: flex; flex-direction: column; flex: 1; transition: var(--transition); }
+        .location-bar:active { opacity: 0.6; }
+        .location-label { font-size: 0.7rem; color: var(--primary); font-weight: bold; text-transform: uppercase; }
+        .location-address { font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; color: var(--text); }
+
+        .search-container { position: relative; width: 100%; }
+        .search-input { 
+            width: 100%; padding: 12px 15px 12px 40px; border-radius: 25px; 
+            border: 1px solid #eee; background: #f4f4f4; outline: none; font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .search-input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(234, 29, 44, 0.1); }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
 
         .app-title {
-            color: var(--primary);
-            font-weight: 900;
-            font-size: 1.2rem;
-            text-align: center;
-            width: 100%;
-            margin-top: 10px;
-            letter-spacing: -0.5px;
+            color: var(--primary); font-weight: 900; font-size: 1.5rem; text-align: center;
+            margin: 15px 0; letter-spacing: -1px; animation: fadeIn 0.5s ease;
         }
 
         /* --- Catálogo --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        
-        h2 { font-size: 1.1rem; margin-bottom: 15px; font-weight: 700; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 10px 20px; }
+        h2 { font-size: 1.1rem; margin: 20px 0 15px; font-weight: 700; display: flex; justify-content: space-between; }
 
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 15px;
-        }
-
-        @media(min-width: 768px) {
-            .product-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
-        }
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; animation: fadeIn 0.6s ease; }
+        @media(min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
 
         .product-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s;
-            display: flex;
-            flex-direction: column;
+            background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+            overflow: hidden; cursor: pointer; position: relative;
+            transition: var(--transition);
         }
+        .product-card:active { transform: scale(0.96); }
+        .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
 
-        .product-card:hover { transform: translateY(-2px); }
-
-        .product-img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-        }
-
-        .product-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
-        .product-title { font-size: 0.95rem; font-weight: 500; margin-bottom: 5px; line-height: 1.2; }
-        .product-desc-short { font-size: 0.8rem; color: var(--text-light); margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .product-meta { margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
-        .product-price { color: #50a773; font-weight: 500; }
-        .delivery-time { font-size: 0.75rem; color: var(--text-light); }
-
-        /* --- Modais (Overlay) --- */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 1000;
-            display: none; justify-content: center; align-items: flex-end;
+        .promo-badge {
+            position: absolute; top: 10px; left: 10px; background: var(--primary);
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; z-index: 5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
-        @media(min-width: 768px) {
-            .modal { align-items: center; }
-            .modal-content { max-width: 500px !important; border-radius: 12px !important; height: auto !important; max-height: 90vh; }
+        .time-badge {
+            position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9);
+            color: #333; padding: 4px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: bold; z-index: 5;
+            display: flex; align-items: center; gap: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .modal.active { display: flex; }
-
-        .modal-content {
-            background: var(--white);
-            width: 100%;
-            height: auto;
-            max-height: 95%;
-            border-radius: 16px 16px 0 0;
-            padding: 20px;
-            overflow-y: auto;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            animation: slideUp 0.3s ease-out;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
-        }
-
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        .close-btn {
-            position: absolute; top: 15px; right: 15px;
-            background: #eee; border: none; width: 30px; height: 30px;
-            border-radius: 50%; cursor: pointer; font-weight: bold; color: #555; font-size: 1.2rem;
-            display: flex; align-items: center; justify-content: center; z-index: 10;
-        }
-
-        /* --- Detalhes do Produto --- */
-        .detail-img { width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius); margin-bottom: 15px; }
-        .detail-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; }
-        .detail-price { color: #50a773; font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; }
-        .benefit-box { background: #fff8f8; border: 1px solid #ffebeb; padding: 12px; border-radius: var(--radius); margin-bottom: 15px; }
-        .benefit-title { color: var(--primary); font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px; }
+        .product-img { width: 100%; height: 130px; object-fit: cover; }
+        .product-info { padding: 10px; }
+        .product-title { font-size: 0.85rem; font-weight: 500; height: 34px; overflow: hidden; margin-bottom: 5px; }
         
-        textarea {
-            width: 100%; border: 1px solid #ddd; border-radius: var(--radius);
-            padding: 12px; font-family: inherit; margin-bottom: 20px; resize: none; outline: none;
-        }
-        textarea:focus { border-color: var(--primary); }
+        .price-tag { display: flex; align-items: center; gap: 5px; }
+        .old-price { text-decoration: line-through; color: #999; font-size: 0.75rem; }
+        .current-price { color: var(--success); font-weight: 700; font-size: 0.95rem; }
 
-        .action-bar {
-            margin-top: auto; border-top: 1px solid #eee; padding-top: 15px;
-            display: flex; justify-content: space-between; align-items: center; gap: 10px;
-        }
-        
-        .counter { display: flex; align-items: center; gap: 15px; border: 1px solid #ddd; padding: 10px 15px; border-radius: var(--radius); }
-        .counter button { border: none; background: none; color: var(--primary); font-size: 1.5rem; cursor: pointer; font-weight: bold; }
-        
-        .btn-primary {
-            flex: 1; background: var(--primary); color: white; border: none;
-            padding: 16px; border-radius: var(--radius); font-weight: 500; cursor: pointer;
-            display: flex; justify-content: space-between; align-items: center; font-size: 1rem;
-        }
-        .btn-primary:active { background: var(--primary-dark); transform: scale(0.98); }
-        .btn-outline {
-            width: 100%; background: white; color: var(--primary); border: 1px solid var(--primary);
-            padding: 12px; border-radius: var(--radius); font-weight: 500; cursor: pointer; margin-top: 10px;
-            display: flex; justify-content: center; align-items: center;
+        /* --- Avaliações & Observação --- */
+        .reviews-section { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+        .review-item { margin-bottom: 10px; background: #f9f9f9; padding: 10px; border-radius: 8px; font-size: 0.8rem; }
+        .review-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .stars { color: #ffb100; }
+        .review-user { font-weight: bold; }
+
+        .obs-container { margin-top: 15px; background: #fff8f8; padding: 10px; border-radius: 8px; border: 1px dashed #ddd; }
+        .obs-label { font-size: 0.8rem; font-weight: bold; color: #555; margin-bottom: 5px; display: block; }
+        .obs-input { 
+            width: 100%; border: 1px solid #eee; border-radius: 6px; padding: 8px; 
+            font-size: 0.85rem; outline: none; background: #fff; resize: none;
         }
 
-        /* --- Formulários --- */
-        .form-group { margin-bottom: 12px; }
-        .form-label { display: block; font-size: 0.8rem; color: var(--text-light); margin-bottom: 4px; font-weight: 500; }
-        .form-input { 
-            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; 
-            outline: none; transition: border 0.2s; font-size: 1rem;
-        }
-        .form-input:focus { border-color: var(--primary); }
-        
-        .form-row { display: flex; gap: 10px; }
-        .form-col-half { flex: 1; }
-        .form-col-third { flex: 0 0 30%; }
-
-        /* --- Carrinho e Checkout --- */
+        /* --- Carrinho & Botões --- */
         .cart-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: var(--white); border-top: 1px solid #eee; padding: 15px 20px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 90;
-            display: flex; justify-content: space-between; align-items: center;
+            position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1); z-index: 99;
+            transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .cart-bar.visible { transform: translateY(0); }
+
+        .cart-item-box { 
+            border: 1px solid #eee; border-radius: 12px; padding: 12px; margin-bottom: 15px;
+            background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.02); position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .btn-pay-item {
+            width: 100%; background: var(--success); color: white; border: none;
+            padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer;
+            transition: var(--transition); box-shadow: 0 4px 6px rgba(80, 167, 115, 0.2);
+        }
+        .btn-pay-item:active { transform: scale(0.98); }
+
+        /* --- Modais --- */
+        .modal { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); z-index: 1000; 
+            display: flex; align-items: flex-end;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .modal.active { opacity: 1; pointer-events: auto; }
+        
+        .modal-content { 
+            background: var(--white); width: 100%; max-height: 90%; 
+            border-radius: 20px 20px 0 0; padding: 25px 20px; overflow-y: auto; 
+            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal.active .modal-content { transform: translateY(0); }
+
+        .close-btn { float: right; font-size: 1.8rem; border: none; background: none; cursor: pointer; color: #999; line-height: 0.8; }
+        
+        /* Review Screen Specifics */
+        .review-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+        .review-row.total { border: none; font-weight: 900; font-size: 1.1rem; margin-top: 10px; color: var(--primary); }
+        .review-obs { font-size: 0.8rem; color: #666; font-style: italic; background: #eee; padding: 8px; border-radius: 6px; margin-top: 5px; }
+
         .hidden { display: none !important; }
 
-        /* --- Pagamento --- */
-        .pix-area { text-align: center; margin-top: 20px; }
-        .pix-logo { height: 25px; margin-bottom: 10px; }
-        .qr-code { width: 180px; height: 180px; margin: 15px auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px; }
-        .timer { color: var(--primary); font-weight: bold; margin: 10px 0; font-size: 1.4rem; font-family: monospace; }
-        
-        /* --- Telas de Carregamento e Sucesso --- */
-        .full-screen-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--primary); color: white;
-            z-index: 2000; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-        }
-
-        .spinner {
-            width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.3);
-            border-top-color: white; border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .success-icon { font-size: 5rem; margin-bottom: 10px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
+        /* Helper for address form */
+        .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .form-group { width: 100%; margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: bold; color: #555; margin-bottom: 5px; }
+        .form-group input { width: 100%; background: white; border: 1px solid #ddd; padding: 12px; border-radius: 8px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <header onclick="openAddressModal()">
-        <div class="location-bar">
-            <span class="location-label">ENTREGAR EM</span>
-            <span class="location-address" id="header-address">Selecionar Endereço</span>
+    <header>
+        <div class="header-top">
+            <div class="location-bar" onclick="openModal('address-modal')">
+                <span class="location-label">Entregar agora em (35-45 min)</span>
+                <span class="location-address" id="header-address">📍 Selecionar Endereço</span>
+            </div>
+            <button onclick="openModal('history-modal')" style="background:none; border:none; font-size: 1.5rem; cursor:pointer; transition: transform 0.2s;">📋</button>
+        </div>
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Buscar frutas (ex: Manga, Jaca...)" onkeyup="filterProducts(this.value)">
         </div>
     </header>
+
     <div class="app-title">iFrutas 🍎</div>
 
     <main class="container">
-        <h2>Destaques da Região 📍</h2>
-        <div class="product-grid" id="product-list">
-            </div>
+        <h2 id="section-title">Destaques da Região 📍</h2>
+        <div class="product-grid" id="product-list"></div>
     </main>
 
-    <div class="cart-bar hidden" id="cart-bar">
+    <div class="cart-bar" id="cart-bar">
         <div>
-            <p style="font-size: 0.8rem; color: #717171;">Total sem entrega</p>
-            <p style="font-weight: bold; font-size: 1.1rem;" id="cart-bar-total">R$ 0,00</p>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="cart-count" style="background: var(--primary); color: white; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 0.75rem; font-weight: bold;">0</span>
+                <span style="font-weight: bold; font-size: 0.9rem;">Item(s) na sacola</span>
+            </div>
+            <span style="font-size: 0.7rem; color: #666;">Entrega estimada: 35-45 min</span>
         </div>
-        <button class="btn-primary" style="flex: 0 0 auto; width: 140px; justify-content: center;" onclick="openCartModal()">
-            Ver Sacola
-        </button>
+        <button class="btn-primary" onclick="openModal('cart-modal')" style="background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(234, 29, 44, 0.3);">Ver Sacola</button>
     </div>
 
     <div class="modal" id="product-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('product-modal')">×</button>
-            <img src="" alt="" class="detail-img" id="modal-img">
-            <h3 class="detail-title" id="modal-title"></h3>
-            <p class="detail-price" id="modal-price"></p>
+            <div style="position: relative;">
+                <img src="" id="modal-img" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
+                <span class="time-badge" style="top: 10px; right: 10px; position: absolute;">🛵 35-45 min</span>
+            </div>
+            <h3 id="modal-title" style="font-size: 1.3rem;"></h3>
+            <div class="price-tag" style="margin: 10px 0;">
+                <span id="modal-old-price" class="old-price"></span>
+                <span id="modal-current-price" class="current-price" style="font-size: 1.4rem;"></span>
+            </div>
+            <p id="modal-desc" style="font-size: 0.9rem; color: #666; margin-bottom: 20px; line-height: 1.4;"></p>
             
-            <div class="benefit-box">
-                <span class="benefit-title">✨ Benefícios e Informações</span>
-                <p id="modal-benefits" style="font-size: 0.85rem; color: #555; line-height: 1.4;"></p>
+            <div class="reviews-section">
+                <h4 style="margin-bottom: 10px;">Avaliações</h4>
+                <div id="modal-reviews"></div>
             </div>
 
-            <div style="margin-bottom: 20px; font-size: 0.85rem; color: #717171; display: flex; align-items: center; gap: 5px;">
-                <span>🛵</span> <span id="modal-delivery-time"></span> • Entregador próximo
+            <div class="obs-container">
+                <label class="obs-label">📝 Alguma observação?</label>
+                <textarea id="obs-input" class="obs-input" rows="2" placeholder="Ex: Fruta mais madura, tirar casca, entregar no portão..."></textarea>
             </div>
 
-            <label style="font-weight: 500; margin-bottom: 8px; display: block; font-size: 0.9rem;">Alguma observação?</label>
-            <textarea id="modal-obs" placeholder="Ex: Tirar o caroço, escolher bem madura..."></textarea>
-
-            <div class="action-bar">
-                <div class="counter">
-                    <button onclick="changeQty(-1)">-</button>
-                    <span id="modal-qty" style="font-weight: bold; min-width: 20px; text-align: center;">1</span>
-                    <button onclick="changeQty(1)">+</button>
+            <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 15px; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+                    <button onclick="changeQty(-1)" style="border:none; background:none; font-size: 1.2rem; color: var(--primary); font-weight: bold;">-</button>
+                    <span id="modal-qty" style="font-weight: bold;">1</span>
+                    <button onclick="changeQty(1)" style="border:none; background:none; font-size: 1.2rem; color: var(--primary); font-weight: bold;">+</button>
                 </div>
-                <button class="btn-primary" onclick="addToCart()">
-                    <span>Adicionar</span>
-                    <span id="modal-btn-price"></span>
-                </button>
+                <button onclick="addToCart()" style="flex: 1; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 10px rgba(234, 29, 44, 0.3);">Adicionar à Sacola</button>
             </div>
         </div>
     </div>
@@ -277,480 +233,417 @@
     <div class="modal" id="cart-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('cart-modal')">×</button>
-            <h3 style="margin-bottom: 20px;">Sua Sacola</h3>
-            <div id="cart-items-container" style="flex: 1; overflow-y: auto;">
-                </div>
+            <h3 style="margin-bottom: 5px;">Sua Sacola 🛒</h3>
+            <p style="font-size: 0.8rem; color: #666; margin-bottom: 20px;">Revise seus itens antes de pagar.</p>
+            <div id="cart-items-container"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="review-modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('review-modal')">×</button>
+            <h3 style="margin-bottom: 20px; color: var(--text);">Resumo do Pedido 🧾</h3>
             
-            <div style="border-top: 1px solid #eee; padding-top: 15px; margin-top: auto;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <strong>Total</strong>
-                    <strong id="cart-total-display">R$ 0,00</strong>
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #ccc;">
+                    <p style="font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: bold;">Entregar em:</p>
+                    <p id="review-address" style="font-weight: bold; font-size: 0.95rem; display:flex; align-items:center; gap:5px;">📍 Carregando...</p>
+                    <p id="review-name" style="font-size: 0.85rem; color: #555; margin-top: 3px;">👤 Carregando...</p>
+                    <p style="font-size: 0.8rem; color: var(--success); font-weight: bold; margin-top: 5px;">⏱️ Entrega estimada: 35-45 min</p>
                 </div>
-                <button class="btn-outline" onclick="clearCart()" style="margin-bottom: 10px; border-color: #ddd; color: #666;">Esvaziar Sacola</button>
-                <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="goToCheckout()">Continuar para Pagamento</button>
+
+                <div id="review-product-details">
+                    </div>
             </div>
+
+            <button onclick="finalizeReview()" style="width: 100%; background: var(--success); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 1rem; box-shadow: 0 4px 10px rgba(80, 167, 115, 0.3);">✅ Confirmar e Pagar</button>
+        </div>
+    </div>
+
+    <div class="modal" id="history-modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('history-modal')">×</button>
+            <h3 style="margin-bottom: 20px;">Meus Pedidos 📋</h3>
+            <div id="history-container"></div>
         </div>
     </div>
 
     <div class="modal" id="address-modal">
-        <div class="modal-content" style="height: auto;">
+        <div class="modal-content">
             <button class="close-btn" onclick="closeModal('address-modal')">×</button>
-            <h3>Endereço de Entrega 🏠</h3>
-            <p style="font-size: 0.85rem; color: #777; margin-bottom: 20px;">Seus dados ficam salvos automaticamente.</p>
-            
-            <div style="margin-top: 10px;">
+            <h3>Onde entregamos? 🏠</h3>
+            <div style="margin-top: 20px;">
                 <div class="form-group">
-                    <label class="form-label">Nome Completo</label>
-                    <input type="text" id="user-name" class="form-input" placeholder="Ex: Maria Silva">
+                    <label>Seu Nome</label>
+                    <input type="text" id="user-name" placeholder="Ex: João da Silva">
                 </div>
-
+                
                 <div class="form-row">
-                    <div class="form-group" style="flex: 2;">
-                        <label class="form-label">Rua / Avenida</label>
-                        <input type="text" id="addr-street" class="form-input" placeholder="Ex: Av. Atlântica">
+                    <div class="form-group" style="flex: 3;">
+                        <label>Rua</label>
+                        <input type="text" id="addr-street" placeholder="Nome da Rua">
                     </div>
                     <div class="form-group" style="flex: 1;">
-                        <label class="form-label">Número</label>
-                        <input type="text" id="addr-num" class="form-input" placeholder="123">
+                        <label>Número</label>
+                        <input type="text" id="addr-num" placeholder="Nº">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Complemento (Opcional)</label>
-                    <input type="text" id="addr-comp" class="form-input" placeholder="Ex: Apt 101, Bloco B">
+                    <label>Complemento <span style="font-weight:normal; color:#888;">(Opcional)</span></label>
+                    <input type="text" id="addr-comp" placeholder="Ex: Apt 101, Fundos">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Ponto de Referência</label>
-                    <input type="text" id="addr-ref" class="form-input" placeholder="Ex: Ao lado da padaria">
+                    <label>Ponto de Referência <span style="font-weight:normal; color:#888;">(Opcional)</span></label>
+                    <input type="text" id="addr-ref" placeholder="Ex: Ao lado da padaria">
                 </div>
 
-                <button class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="saveAddress()">Salvar Endereço</button>
+                <button onclick="saveAddress()" style="width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; margin-top: 10px;">Salvar Endereço</button>
             </div>
         </div>
     </div>
 
     <div class="modal" id="checkout-modal">
-        <div class="modal-content">
+        <div class="modal-content" style="text-align: center;">
             <button class="close-btn" onclick="closeModal('checkout-modal')">×</button>
-            <h3>Finalizar Pedido</h3>
+            <h3>Finalizar Pagamento</h3>
+            <p id="checkout-item-name" style="font-weight: bold; margin: 15px 0;"></p>
             
-            <div style="margin: 20px 0; background: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
-                <p style="margin-bottom: 5px;"><strong>📍 Entregar em:</strong></p>
-                <p id="checkout-address-display" style="color: #555; font-size: 0.95rem; line-height: 1.4;">...</p>
-                <div style="margin-top: 10px; border-top: 1px dashed #ddd; padding-top: 5px;">
-                    <p style="font-size: 0.85rem; color: #777;">Para: <span id="checkout-name-display" style="font-weight: bold; color: #333;">...</span></p>
-                </div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo%E2%80%94pix_powered_by_Banco_Central_%28Brazil%2C_2020%29.svg/2560px-Logo%E2%80%94pix_powered_by_Banco_Central_%28Brazil%2C_2020%29.svg.png" width="80" style="margin-bottom: 10px;">
+            <div style="background: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 15px; animation: popIn 0.5s ease;">
+                <img id="checkout-qr" src="" style="width: 180px; height: 180px; margin-bottom: 10px;">
+                <p style="font-size: 0.8rem; color: #666;">Pague e retorne para confirmar</p>
             </div>
 
-            <div style="margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                    <p><strong>🛒 Resumo:</strong></p>
-                    <p style="font-weight: bold; font-size: 1.1rem;" id="checkout-total-display"></p>
-                </div>
-                <div id="checkout-items-summary" style="font-size: 0.85rem; color: #777; margin-top: 5px;"></div>
-            </div>
-
-            <div class="pix-area">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo%E2%80%94pix_powered_by_Banco_Central_%28Brazil%2C_2020%29.svg/2560px-Logo%E2%80%94pix_powered_by_Banco_Central_%28Brazil%2C_2020%29.svg.png" alt="Pix" class="pix-logo">
-                <p style="font-size: 0.9rem;">Escaneie ou copie o código abaixo</p>
-                
-                <img id="pix-qr-img" src="" class="qr-code" alt="QR Code Pix">
-                
-                <div class="timer" id="payment-timer">10:00</div>
-                
-                <button class="btn-primary" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="copyPixCode()">
-                    📋 Copiar Código Pix
-                </button>
-                
-                <a id="payment-link-btn" href="#" target="_blank" class="btn-outline" style="display: block; text-align: center; text-decoration: none;" onclick="clickPaymentLink()">
-                    🔗 Link de Pagamento (Nubank)
-                </a>
-                
-                <p style="font-size: 0.75rem; color: #888; margin-top: 15px; line-height: 1.3;">
-                    ⚠️ Após pagar, retorne a esta tela. O pedido será confirmado automaticamente após alguns segundos.
-                </p>
-            </div>
+            <button onclick="copyPix()" style="width: 100%; background: #333; color: white; border: none; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-weight: bold;">📋 Copiar Código Pix</button>
+            <a id="checkout-link" href="#" target="_blank" onclick="simulatePaymentStart()" style="display: block; width: 100%; background: #00d700; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold;">🔗 Abrir Link de Pagamento</a>
         </div>
     </div>
 
-    <div class="full-screen-overlay hidden" id="loading-screen">
-        <div class="spinner"></div>
-        <h3>Confirmando Pagamento...</h3>
-        <p>Validando transação Pix</p>
-    </div>
-
-    <div class="full-screen-overlay hidden" id="success-screen" style="background: #ffffff; color: #3e3e3e;">
-        <div class="success-icon">✅</div>
-        <h2 style="color: #ea1d2c; margin-bottom: 10px;">Pedido Confirmado!</h2>
-        <p>Seu pedido já está sendo preparado.</p>
-        
-        <div style="margin-top: 30px; background: #f9f9f9; padding: 20px; border-radius: 12px; width: 80%; max-width: 300px;">
-            <p style="font-size: 0.9rem; color: #777; margin-bottom: 5px;">Tempo estimado</p>
-            <p style="font-size: 1.5rem; font-weight: bold; color: #333;"><span id="final-delivery-time"></span> min</p>
-        </div>
-
-        <button class="btn-outline" style="margin-top: 40px; width: 200px;" onclick="location.reload()">Voltar ao Início</button>
+    <div id="loading-overlay" class="hidden" style="position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(234,29,44,0.95); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white;">
+        <div style="width: 50px; height: 50px; border: 5px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <h3 style="margin-top: 20px;">Processando seu Pix...</h3>
     </div>
 
     <script>
-        // --- Dados ---
+        // --- DATA ---
         const products = [
             {
-                id: 1,
-                name: "Jaca Dura Premium",
-                price: 20.00,
-                images: [
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRav5c9icx32NBrS6E--h_GOloEZH_vZcvOf4VTc_zLxEPDLGHzHbi3VOw&s=10",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_XdABlgSDGXxdX0dXmZ-x60mt_3bhVHzdmzAPFfGqWHAUDk0RFCrFLt0&s=10",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNfE8FJ3-0MvKA6jtEsdNNg7POdF4rf3-dTPbjCXNi35KHwl_UJXZ__sSc&s=10"
-                ],
-                benefits: "Rica em fibras e energia. A Jaca Dura possui gominhos firmes, crocantes e sabor inigualável. Fonte de Vitamina A e C.",
-                deliveryRange: [20, 50]
+                id: 1, name: "Jaca Dura Premium", price: 20.00, oldPrice: 25.00,
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRav5c9icx32NBrS6E--h_GOloEZH_vZcvOf4VTc_zLxEPDLGHzHbi3VOw&s=10",
+                desc: "Jaca de ótima qualidade, gominhos crocantes e muito doces.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO621405100JMyqeB0Mz630473B5",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693b9dab-a751-438b-9db5-871e056167c6",
+                reviews: [{u: "Ricardo M.", s: 5, t: "Melhor jaca que já comi no Rio!"}, {u: "Ana P.", s: 4, t: "Muito boa, chegou bem geladinha."}]
             },
             {
-                id: 2,
-                name: "Jaca Mole Selecionada",
-                price: 20.00,
-                images: [
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZDNoz0ZN-3wuE8PQPN8oG0WK7dPcbTiCJ3J0w7eFIQbMMgBOyIKLJDss&s=10",
-                    "https://images.tcdn.com.br/img/img_prod/1017342/muda_de_jaca_mole_enxertada_201_2_c5fbd1e5308815d0bf9bb6b6767fa2e4.jpg"
-                ],
-                benefits: "Textura cremosa e adocicada. A Jaca Mole é perfeita para doces ou consumo in natura. Rica em antioxidantes.",
-                deliveryRange: [20, 45]
+                id: 2, name: "Jaca Mole Selecionada", price: 20.00, oldPrice: 28.00,
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZDNoz0ZN-3wuE8PQPN8oG0WK7dPcbTiCJ3J0w7eFIQbMMgBOyIKLJDss&s=10",
+                desc: "Textura cremosa, ideal para quem gosta de jaca bem madura.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO621405100JMyqeB0Mz630473B5",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693b9dab-a751-438b-9db5-871e056167c6",
+                reviews: [{u: "Marcos T.", s: 5, t: "Perfeita para comer de colher."}]
+            },
+            {
+                id: 3, name: "Saco com 10 Mangas Espada", price: 5.00, oldPrice: 12.00, promo: "PROMOÇÃO",
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmYk_HY_3VmSD04r2F-Z-I526sAD60xgNzngZJNQnvj-FgsphJ8aI28dE&s=10",
+                desc: "Mangas espada selecionadas. Saco fechado com 10 unidades.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc552040000530398654045.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510JDQ3sb0SN8630497E5",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693baf36-28cb-4b93-97a6-d054b2d70ee3",
+                reviews: [{u: "Carla S.", s: 5, t: "Pelo preço, a qualidade é absurda!"}, {u: "Pedro J.", s: 5, t: "Docinhas demais."}]
+            },
+            {
+                id: 4, name: "Saco com 20 Mangas Espada", price: 10.00, oldPrice: 20.00, promo: "MELHOR PREÇO",
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyA-o71zixhlPoztyYsnOp0qFhUggWxOUSZ2SE7iBqySzB73njOWh9kIw&s=10",
+                desc: "Combo família com 20 mangas espada. Super doces.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510SdE6QFAylY63042B3C",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693bb002-4b9b-4a28-9323-7cde9e373115",
+                reviews: [{u: "Joana G.", s: 5, t: "Valeu muito a pena, vieram todas perfeitas."}]
+            },
+            {
+                id: 5, name: "Kit 2 Abacaxis Pérola", price: 5.00, oldPrice: 10.00, promo: "2 POR 5",
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJVQgq5FCLAQ7Ta4G2Qw9yVOljcMJM1wkHZCYhVxrq5GmKCtYhdyKAjWU&s=10",
+                desc: "Abacaxi Pérola bem maduro e doce. Direto do produtor.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc552040000530398654045.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510JDQ3sb0SN8630497E5",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693baf36-28cb-4b93-97a6-d054b2d70ee3",
+                reviews: [{u: "Felipe L.", s: 5, t: "Melhor abacaxi da região!"}]
+            },
+            {
+                id: 6, name: "Combo 5 Abacaxis Pérola", price: 10.00, oldPrice: 25.00, promo: "OFERTA",
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJVQgq5FCLAQ7Ta4G2Qw9yVOljcMJM1wkHZCYhVxrq5GmKCtYhdyKAjWU&s=10",
+                desc: "Ideal para sucos e sobremesas. 5 unidades grandes.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510SdE6QFAylY63042B3C",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693bb002-4b9b-4a28-9323-7cde9e373115",
+                reviews: [{u: "Beatriz R.", s: 4, t: "Muito bom, entregador foi super atencioso."}]
             }
         ];
 
-        const pixCode = "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO621405100JMyqeB0Mz630473B5";
-        const pixLink = "https://nubank.com.br/cobrar/1ku07b/693b9dab-a751-438b-9db5-871e056167c6";
-
-        // --- Estado Global ---
+        // --- STATE ---
         let cart = [];
+        let history = JSON.parse(localStorage.getItem('iFrutasHistory') || '[]');
         let currentProduct = null;
         let currentQty = 1;
-        
-        // Estrutura de dados do usuário atualizada
-        let userData = {
-            name: "",
-            street: "",
-            number: "",
-            comp: "",
-            ref: "",
-            formatted: ""
-        };
+        let isWaitingPayment = false;
 
-        let timerInterval;
-        
-        // Variaveis para lógica de pagamento (Visibility API)
-        let isPaymentPending = false;
-        let leftAppTimestamp = 0;
-
-        // --- Inicialização ---
-        document.addEventListener('DOMContentLoaded', () => {
-            renderProducts();
-            loadUserData(); // Carregar dados salvos
-            
-            // Gerar QR Code
-            document.getElementById('pix-qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pixCode)}`;
-            document.getElementById('payment-link-btn').href = pixLink;
-            
-            // Se não tiver endereço, pede.
-            setTimeout(() => {
-                if(!userData.formatted) openAddressModal();
-            }, 1000);
-
-            // Listener para Visibility Change (Sair e voltar da aba)
-            document.addEventListener("visibilitychange", handleVisibilityChange);
-        });
-
-        // --- Persistência de Dados (LocalStorage) ---
-        function loadUserData() {
-            const stored = localStorage.getItem('iFrutasUser');
-            if (stored) {
-                userData = JSON.parse(stored);
-                updateHeaderAddress();
-                // Preencher campos do modal
-                document.getElementById('user-name').value = userData.name || "";
-                document.getElementById('addr-street').value = userData.street || "";
-                document.getElementById('addr-num').value = userData.number || "";
-                document.getElementById('addr-comp').value = userData.comp || "";
-                document.getElementById('addr-ref').value = userData.ref || "";
-            }
+        // --- CORE FUNCTIONS ---
+        function renderProducts(list = products) {
+            const container = document.getElementById('product-list');
+            container.innerHTML = list.map(p => `
+                <div class="product-card" onclick="openProduct(${p.id})">
+                    ${p.promo ? `<div class="promo-badge">${p.promo}</div>` : ''}
+                    <div class="time-badge">🕒 35-45 min</div>
+                    <img src="${p.img}" class="product-img">
+                    <div class="product-info">
+                        <div class="product-title">${p.name}</div>
+                        <div class="price-tag">
+                            <span class="old-price">R$ ${p.oldPrice.toFixed(2)}</span>
+                            <span class="current-price">R$ ${p.price.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
+        function filterProducts(query) {
+            const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+            renderProducts(filtered);
+            document.getElementById('section-title').innerText = query ? `Resultados para "${query}"` : "Destaques da Região 📍";
+        }
+
+        function openProduct(id) {
+            currentProduct = products.find(p => p.id === id);
+            currentQty = 1;
+            document.getElementById('modal-img').src = currentProduct.img;
+            document.getElementById('modal-title').innerText = currentProduct.name;
+            document.getElementById('modal-old-price').innerText = `R$ ${currentProduct.oldPrice.toFixed(2)}`;
+            document.getElementById('modal-current-price').innerText = `R$ ${currentProduct.price.toFixed(2)}`;
+            document.getElementById('modal-desc').innerText = currentProduct.desc;
+            document.getElementById('modal-qty').innerText = currentQty;
+            document.getElementById('obs-input').value = ""; // Limpa observação anterior
+            
+            document.getElementById('modal-reviews').innerHTML = currentProduct.reviews.map(r => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="review-user">${r.u}</span>
+                        <span class="stars">${'★'.repeat(r.s)}</span>
+                    </div>
+                    <p style="color:#666; font-style:italic;">"${r.t}"</p>
+                </div>
+            `).join('');
+
+            openModal('product-modal');
+        }
+
+        function changeQty(delta) {
+            currentQty = Math.max(1, currentQty + delta);
+            document.getElementById('modal-qty').innerText = currentQty;
+        }
+
+        function addToCart() {
+            const obs = document.getElementById('obs-input').value;
+            cart.push({ ...currentProduct, qty: currentQty, cartId: Date.now(), obs: obs });
+            updateCartUI();
+            closeModal('product-modal');
+        }
+
+        function updateCartUI() {
+            const count = cart.length;
+            const cartBar = document.getElementById('cart-bar');
+            
+            if (count > 0) {
+                cartBar.classList.remove('hidden');
+                setTimeout(() => cartBar.classList.add('visible'), 10);
+            } else {
+                cartBar.classList.remove('visible');
+                setTimeout(() => cartBar.classList.add('hidden'), 400);
+            }
+
+            document.getElementById('cart-count').innerText = count;
+
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = cart.map((item, idx) => `
+                <div class="cart-item-box">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>${item.qty}x ${item.name}</strong>
+                        <span style="color:var(--success); font-weight:bold;">R$ ${(item.price * item.qty).toFixed(2)}</span>
+                    </div>
+                    ${item.obs ? `<p style="font-size:0.75rem; color:#666; margin-top:4px;">📝 Obs: ${item.obs}</p>` : ''}
+                    <button class="btn-pay-item" onclick="openReviewModal(${idx})">Revisar e Pagar</button>
+                    <button onclick="removeFromCart(${idx})" style="width:100%; background:none; border:none; color:#999; margin-top:8px; font-size:0.7rem; cursor:pointer;">Remover da sacola</button>
+                </div>
+            `).join('');
+        }
+
+        function removeFromCart(idx) {
+            cart.splice(idx, 1);
+            updateCartUI();
+            if(cart.length === 0) closeModal('cart-modal');
+        }
+
+        // --- REVIEW & CHECKOUT LOGIC ---
+        function openReviewModal(idx) {
+            const item = cart[idx];
+            currentProduct = item; // Para uso no checkout
+
+            // Dados do Endereço
+            const savedAddr = localStorage.getItem('iFrutasAddr');
+            const savedName = localStorage.getItem('iFrutasName') || "Cliente";
+
+            if(!savedAddr) {
+                alert("Por favor, adicione um endereço antes de prosseguir.");
+                closeModal('cart-modal');
+                openModal('address-modal');
+                return;
+            }
+
+            document.getElementById('review-address').innerHTML = `📍 ${savedAddr}`;
+            document.getElementById('review-name').innerHTML = `👤 ${savedName}`;
+            
+            // Detalhes do produto
+            const total = item.price * item.qty;
+            document.getElementById('review-product-details').innerHTML = `
+                <div class="review-row">
+                    <span>${item.qty}x ${item.name}</span>
+                    <span>R$ ${total.toFixed(2)}</span>
+                </div>
+                ${item.obs ? `<div class="review-obs">" ${item.obs} "</div>` : ''}
+                <div class="review-row total">
+                    <span>Total a Pagar</span>
+                    <span>R$ ${total.toFixed(2)}</span>
+                </div>
+            `;
+
+            closeModal('cart-modal');
+            openModal('review-modal');
+        }
+
+        function finalizeReview() {
+            closeModal('review-modal');
+            startCheckout();
+        }
+
+        function startCheckout() {
+            const item = currentProduct;
+            document.getElementById('checkout-item-name').innerText = `${item.qty}x ${item.name}`;
+            document.getElementById('checkout-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(item.pixCode)}`;
+            document.getElementById('checkout-link').href = item.pixLink;
+            
+            openModal('checkout-modal');
+        }
+
+        function copyPix() {
+            navigator.clipboard.writeText(currentProduct.pixCode);
+            alert("Código copiado! Pague no seu banco.");
+            simulatePaymentStart();
+        }
+
+        function simulatePaymentStart() {
+            isWaitingPayment = true;
+        }
+
+        // Detectar quando o usuário volta para a aba após sair para pagar
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden && isWaitingPayment) {
+                confirmPayment();
+            }
+        });
+
+        function confirmPayment() {
+            isWaitingPayment = false;
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            
+            setTimeout(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                
+                // Salva no histórico
+                const order = {
+                    id: Math.floor(Math.random() * 10000),
+                    name: currentProduct.name,
+                    date: new Date().toLocaleString(),
+                    price: currentProduct.price * currentProduct.qty,
+                    status: "Em Preparo 🛵"
+                };
+                history.unshift(order);
+                localStorage.setItem('iFrutasHistory', JSON.stringify(history));
+
+                // Remove do carrinho o item pago
+                cart = cart.filter(i => i.cartId !== currentProduct.cartId);
+                updateCartUI();
+                
+                closeModal('checkout-modal');
+                // Pequeno delay para UX
+                setTimeout(() => {
+                    alert("Pagamento Confirmado! Seu pedido chegará em aprox. 40min.");
+                    openModal('history-modal');
+                    updateHistoryUI();
+                }, 300);
+            }, 3000);
+        }
+
+        function updateHistoryUI() {
+            const container = document.getElementById('history-container');
+            if(history.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:#999; margin-top:20px;'>Você ainda não fez pedidos.</p>";
+                return;
+            }
+            container.innerHTML = history.map(h => `
+                <div class="cart-item-box" style="border-left: 4px solid var(--primary); animation: fadeIn 0.4s ease;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#888;">
+                        <span>Pedido #${h.id}</span>
+                        <span>${h.date}</span>
+                    </div>
+                    <p style="margin:5px 0; font-weight:bold;">${h.name}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                        <span style="color:var(--success); font-weight:bold;">R$ ${h.price.toFixed(2)}</span>
+                        <span style="background:#fff3f3; color:var(--primary); padding:3px 8px; border-radius:4px; font-size:0.7rem; font-weight:bold;">${h.status}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- UTILS ---
+        function openModal(id) { document.getElementById(id).classList.add('active'); if(id === 'history-modal') updateHistoryUI(); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        
         function saveAddress() {
             const name = document.getElementById('user-name').value;
             const street = document.getElementById('addr-street').value;
             const num = document.getElementById('addr-num').value;
             const comp = document.getElementById('addr-comp').value;
             const ref = document.getElementById('addr-ref').value;
+
+            if(!name || !street || !num) return alert("Por favor, preencha Nome, Rua e Número.");
+
+            // Formata o endereço completo para salvar
+            let fullAddr = `${street}, ${num}`;
+            if(comp) fullAddr += ` - ${comp}`;
+            if(ref) fullAddr += ` (${ref})`;
             
-            if (!name || !street || !num) {
-                alert("Por favor, preencha Nome, Rua e Número.");
-                return;
-            }
-            
-            // Formatar endereço para exibição
-            const formatted = `${street}, ${num}`;
-
-            // Atualizar objeto global
-            userData = {
-                name: name,
-                street: street,
-                number: num,
-                comp: comp,
-                ref: ref,
-                formatted: formatted
-            };
-
-            // Salvar no navegador
-            localStorage.setItem('iFrutasUser', JSON.stringify(userData));
-
-            updateHeaderAddress();
+            document.getElementById('header-address').innerText = `📍 ${street}, ${num}`;
+            localStorage.setItem('iFrutasAddr', fullAddr);
+            localStorage.setItem('iFrutasName', name);
             closeModal('address-modal');
         }
 
-        function updateHeaderAddress() {
-            if (userData.formatted) {
-                document.getElementById('header-address').innerText = userData.formatted;
-            } else {
-                document.getElementById('header-address').innerText = "Selecionar Endereço";
+        // --- INIT ---
+        window.onload = () => {
+            renderProducts();
+            const savedAddr = localStorage.getItem('iFrutasAddr');
+            if(savedAddr) {
+                // Se já tem salvo, mostra resumido no header (pegando a primeira parte da string se for longa)
+                // Mas aqui vamos simplificar e mostrar "Seu Endereço" ou o salvo
+                document.getElementById('header-address').innerText = `📍 ${savedAddr.split(',')[0]}...`;
             }
-        }
-
-        // --- Renderização ---
-        function renderProducts() {
-            const container = document.getElementById('product-list');
-            container.innerHTML = products.map(p => {
-                const time = Math.floor(Math.random() * (p.deliveryRange[1] - p.deliveryRange[0]) + p.deliveryRange[0]);
-                return `
-                <div class="product-card" onclick="openProduct(${p.id})">
-                    <img src="${p.images[0]}" class="product-img" alt="${p.name}">
-                    <div class="product-info">
-                        <h3 class="product-title">${p.name}</h3>
-                        <p class="product-desc-short">${p.benefits}</p>
-                        <div class="product-meta">
-                            <span class="product-price">R$ ${p.price.toFixed(2)}</span>
-                            <span class="delivery-time">🕒 ${time} min</span>
-                        </div>
-                    </div>
-                </div>
-                `
-            }).join('');
-        }
-
-        // --- Modal Produto ---
-        function openProduct(id) {
-            currentProduct = products.find(p => p.id === id);
-            currentQty = 1;
-            
-            document.getElementById('modal-img').src = currentProduct.images[0];
-            document.getElementById('modal-title').innerText = currentProduct.name;
-            document.getElementById('modal-price').innerText = `R$ ${currentProduct.price.toFixed(2)}`;
-            document.getElementById('modal-benefits').innerText = currentProduct.benefits;
-            document.getElementById('modal-qty').innerText = currentQty;
-            document.getElementById('modal-obs').value = '';
-            
-            const time = Math.floor(Math.random() * (currentProduct.deliveryRange[1] - currentProduct.deliveryRange[0]) + currentProduct.deliveryRange[0]);
-            document.getElementById('modal-delivery-time').innerText = `${time}-${time+10} min`;
-            
-            updateModalBtnPrice();
-            document.getElementById('product-modal').classList.add('active');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-            if (id === 'checkout-modal') {
-                stopTimer();
-                isPaymentPending = false; // Resetar se fechar o modal
+            else {
+                setTimeout(() => openModal('address-modal'), 1500);
             }
-        }
+        };
 
-        function changeQty(delta) {
-            if (currentQty + delta >= 1) {
-                currentQty += delta;
-                document.getElementById('modal-qty').innerText = currentQty;
-                updateModalBtnPrice();
-            }
-        }
-
-        function updateModalBtnPrice() {
-            const total = currentProduct.price * currentQty;
-            document.getElementById('modal-btn-price').innerText = `R$ ${total.toFixed(2)}`;
-        }
-
-        function addToCart() {
-            const obs = document.getElementById('modal-obs').value;
-            const item = {
-                product: currentProduct,
-                qty: currentQty,
-                obs: obs,
-                totalPrice: currentProduct.price * currentQty
-            };
-            
-            cart.push(item);
-            closeModal('product-modal');
-            updateCartUI();
-        }
-
-        // --- Carrinho ---
-        function updateCartUI() {
-            const cartBar = document.getElementById('cart-bar');
-            const total = cart.reduce((acc, item) => acc + item.totalPrice, 0);
-            
-            document.getElementById('cart-bar-total').innerText = `R$ ${total.toFixed(2)}`;
-            document.getElementById('cart-total-display').innerText = `R$ ${total.toFixed(2)}`;
-            
-            if (cart.length > 0) cartBar.classList.remove('hidden');
-            else cartBar.classList.add('hidden');
-
-            const cartContainer = document.getElementById('cart-items-container');
-            if (cart.length === 0) {
-                cartContainer.innerHTML = '<p style="text-align:center; margin-top: 40px; color:#999;">Sua sacola está vazia 🛒</p>';
-            } else {
-                cartContainer.innerHTML = cart.map((item, index) => `
-                    <div style="display:flex; gap:10px; margin-bottom:15px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
-                        <img src="${item.product.images[0]}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
-                        <div style="flex:1;">
-                            <div style="display:flex; justify-content:space-between;">
-                                <span style="font-weight:500;">${item.qty}x ${item.product.name}</span>
-                                <span style="font-weight:bold;">R$ ${item.totalPrice.toFixed(2)}</span>
-                            </div>
-                            ${item.obs ? `<p style="font-size:0.75rem; color:#888;">Obs: ${item.obs}</p>` : ''}
-                            <button onclick="removeFromCart(${index})" style="color:var(--primary); background:none; border:none; font-size:0.8rem; margin-top:5px; cursor:pointer;">Remover</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-            if(cart.length === 0) closeModal('cart-modal');
-        }
-
-        function clearCart() {
-            cart = [];
-            updateCartUI();
-            closeModal('cart-modal');
-        }
-
-        function openCartModal() {
-            document.getElementById('cart-modal').classList.add('active');
-        }
-
-        function openAddressModal() {
-            document.getElementById('address-modal').classList.add('active');
-        }
-
-        // --- Checkout ---
-        function goToCheckout() {
-            if (!userData.formatted) {
-                closeModal('cart-modal');
-                openAddressModal();
-                return;
-            }
-            
-            closeModal('cart-modal');
-            document.getElementById('checkout-modal').classList.add('active');
-            
-            // Exibir dados completos
-            let fullAddr = `${userData.street}, ${userData.number}`;
-            if(userData.comp) fullAddr += ` - ${userData.comp}`;
-            if(userData.ref) fullAddr += ` (${userData.ref})`;
-
-            document.getElementById('checkout-address-display').innerText = fullAddr;
-            document.getElementById('checkout-name-display').innerText = userData.name;
-            
-            const total = cart.reduce((acc, item) => acc + item.totalPrice, 0);
-            document.getElementById('checkout-total-display').innerText = `R$ ${total.toFixed(2)}`;
-            
-            document.getElementById('checkout-items-summary').innerHTML = cart.map(i => `${i.qty}x ${i.product.name}`).join(', ');
-
-            isPaymentPending = false; // Resetar estado
-            startTimer();
-        }
-
-        function startTimer() {
-            let timeLeft = 600; 
-            const timerEl = document.getElementById('payment-timer');
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                timerEl.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert("Tempo esgotado!");
-                    closeModal('checkout-modal');
-                }
-                timeLeft--;
-            }, 1000);
-        }
-
-        function stopTimer() { clearInterval(timerInterval); }
-
-        // --- Lógica de Pagamento Atualizada (Visibilidade) ---
-
-        function copyPixCode() {
-            navigator.clipboard.writeText(pixCode).then(() => {
-                alert("Código Pix copiado! Vá ao app do seu banco e pague.");
-                // Marca que o usuário iniciou o processo de pagamento
-                isPaymentPending = true;
-            }).catch(() => {
-                alert("Erro ao copiar automaticamente. Tente o Link.");
-            });
-        }
-
-        function clickPaymentLink() {
-            // Marca que o usuário iniciou o processo de pagamento
-            isPaymentPending = true;
-        }
-
-        // Função que detecta quando o usuário sai e volta da aba/app
-        function handleVisibilityChange() {
-            if (document.hidden) {
-                // Usuário saiu do app/site
-                if (isPaymentPending) {
-                    leftAppTimestamp = Date.now();
-                }
-            } else {
-                // Usuário voltou ao app/site
-                if (isPaymentPending) {
-                    const timeAway = Date.now() - leftAppTimestamp;
-                    
-                    // Verifica se ficou fora pelo menos 3 segundos (tempo mínimo pra abrir banco e pagar)
-                    // Isso evita disparar se ele só trocou de aba acidentalmente
-                    if (timeAway > 3000) {
-                        closeModal('checkout-modal');
-                        showLoading();
-                        isPaymentPending = false; // Resetar
-                    }
-                }
-            }
-        }
-
-        function showLoading() {
-            const loading = document.getElementById('loading-screen');
-            loading.classList.remove('hidden');
-            
-            // Simula verificação no servidor
-            setTimeout(() => {
-                loading.classList.add('hidden');
-                showSuccess();
-            }, 3000);
-        }
-
-        function showSuccess() {
-            const success = document.getElementById('success-screen');
-            const time = Math.floor(Math.random() * (45 - 25) + 25);
-            document.getElementById('final-delivery-time').innerText = `${time}-${time+15}`;
-            
-            success.classList.remove('hidden');
-            cart = []; 
-            updateCartUI();
-        }
+        // Estilos para animação spinner
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes spin { to { transform: rotate(360deg); } }`;
+        document.head.appendChild(style);
 
     </script>
 </body>
