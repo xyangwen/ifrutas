@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>iFrutas - As Melhores Frutas do Rio</title>
+    <title>iFrutas - Delivery de Frutas e Lanches</title>
+    
+    <link rel="icon" href="https://static.vecteezy.com/system/resources/previews/036/131/589/non_2x/fruit-or-vegetable-logo-illustration-vector.jpg">
+    <meta property="og:image" content="https://static.vecteezy.com/system/resources/previews/036/131/589/non_2x/fruit-or-vegetable-logo-illustration-vector.jpg">
+    <meta property="og:title" content="iFrutas & Lanches - Delivery Rápido">
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -58,9 +63,23 @@
             margin: 15px 0; letter-spacing: -1px; animation: fadeIn 0.5s ease;
         }
 
+        /* --- Categorias --- */
+        .category-bar {
+            display: flex; gap: 10px; overflow-x: auto; padding: 5px 20px 15px;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        }
+        .category-bar::-webkit-scrollbar { display: none; }
+        
+        .cat-btn {
+            background: #fff; border: 1px solid #eee; padding: 8px 16px; border-radius: 20px;
+            font-size: 0.9rem; font-weight: 500; color: var(--text-light); white-space: nowrap;
+            cursor: pointer; transition: var(--transition); box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 8px rgba(234, 29, 44, 0.2); }
+
         /* --- Catálogo --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 10px 20px; }
-        h2 { font-size: 1.1rem; margin: 20px 0 15px; font-weight: 700; display: flex; justify-content: space-between; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 10px; }
+        h2 { font-size: 1.1rem; margin: 10px 0 15px; font-weight: 700; display: flex; justify-content: space-between; }
 
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; animation: fadeIn 0.6s ease; }
         @media(min-width: 768px) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -80,7 +99,7 @@
         }
         
         .time-badge {
-            position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9);
+            position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95);
             color: #333; padding: 4px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: bold; z-index: 5;
             display: flex; align-items: center; gap: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -142,10 +161,18 @@
             background: var(--white); width: 100%; max-height: 90%; 
             border-radius: 20px 20px 0 0; padding: 25px 20px; overflow-y: auto; 
             transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
         .modal.active .modal-content { transform: translateY(0); }
 
-        .close-btn { float: right; font-size: 1.8rem; border: none; background: none; cursor: pointer; color: #999; line-height: 0.8; }
+        /* Correção do Botão Fechar */
+        .close-btn { 
+            position: absolute; top: 15px; right: 15px; z-index: 1001;
+            font-size: 2rem; border: none; background: rgba(255,255,255,0.8); 
+            width: 35px; height: 35px; border-radius: 50%;
+            cursor: pointer; color: #333; line-height: 1; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
         
         /* Review Screen Specifics */
         .review-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
@@ -173,14 +200,21 @@
         </div>
         <div class="search-container">
             <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" placeholder="Buscar frutas (ex: Manga, Jaca...)" onkeyup="filterProducts(this.value)">
+            <input type="text" class="search-input" placeholder="Buscar no cardápio..." onkeyup="filterProducts(this.value)">
         </div>
     </header>
 
-    <div class="app-title">iFrutas 🍎</div>
+    <div class="app-title">iFrutas & Lanches 🍎🍔</div>
+
+    <div class="category-bar">
+        <button class="cat-btn active" onclick="setCategory('todos', this)">Todos</button>
+        <button class="cat-btn" onclick="setCategory('frutas', this)">Frutas</button>
+        <button class="cat-btn" onclick="setCategory('lanches', this)">Lanches</button>
+        <button class="cat-btn" onclick="setCategory('bebidas', this)">Bebidas</button>
+    </div>
 
     <main class="container">
-        <h2 id="section-title">Destaques da Região 📍</h2>
+        <h2 id="section-title">Destaques 📍</h2>
         <div class="product-grid" id="product-list"></div>
     </main>
 
@@ -199,7 +233,7 @@
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('product-modal')">×</button>
             <div style="position: relative;">
-                <img src="" id="modal-img" style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
+                <img src="" id="modal-img" style="width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                 <span class="time-badge" style="top: 10px; right: 10px; position: absolute;">🛵 35-45 min</span>
             </div>
             <h3 id="modal-title" style="font-size: 1.3rem;"></h3>
@@ -216,7 +250,7 @@
 
             <div class="obs-container">
                 <label class="obs-label">📝 Alguma observação?</label>
-                <textarea id="obs-input" class="obs-input" rows="2" placeholder="Ex: Fruta mais madura, tirar casca, entregar no portão..."></textarea>
+                <textarea id="obs-input" class="obs-input" rows="2" placeholder="Ex: Sem cebola, gelo separado, fruta madura..."></textarea>
             </div>
 
             <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
@@ -233,7 +267,7 @@
     <div class="modal" id="cart-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('cart-modal')">×</button>
-            <h3 style="margin-bottom: 5px;">Sua Sacola 🛒</h3>
+            <h3 style="margin-bottom: 5px; padding-right: 30px;">Sua Sacola 🛒</h3>
             <p style="font-size: 0.8rem; color: #666; margin-bottom: 20px;">Revise seus itens antes de pagar.</p>
             <div id="cart-items-container"></div>
         </div>
@@ -242,7 +276,7 @@
     <div class="modal" id="review-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('review-modal')">×</button>
-            <h3 style="margin-bottom: 20px; color: var(--text);">Resumo do Pedido 🧾</h3>
+            <h3 style="margin-bottom: 20px; color: var(--text); padding-right: 30px;">Resumo do Pedido 🧾</h3>
             
             <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
                 <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #ccc;">
@@ -263,7 +297,7 @@
     <div class="modal" id="history-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('history-modal')">×</button>
-            <h3 style="margin-bottom: 20px;">Meus Pedidos 📋</h3>
+            <h3 style="margin-bottom: 20px; padding-right: 30px;">Meus Pedidos 📋</h3>
             <div id="history-container"></div>
         </div>
     </div>
@@ -271,7 +305,7 @@
     <div class="modal" id="address-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('address-modal')">×</button>
-            <h3>Onde entregamos? 🏠</h3>
+            <h3 style="padding-right: 30px;">Onde entregamos? 🏠</h3>
             <div style="margin-top: 20px;">
                 <div class="form-group">
                     <label>Seu Nome</label>
@@ -307,7 +341,7 @@
     <div class="modal" id="checkout-modal">
         <div class="modal-content" style="text-align: center;">
             <button class="close-btn" onclick="closeModal('checkout-modal')">×</button>
-            <h3>Finalizar Pagamento</h3>
+            <h3 style="padding-right: 30px;">Finalizar Pagamento</h3>
             <p id="checkout-item-name" style="font-weight: bold; margin: 15px 0;"></p>
             
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo%E2%80%94pix_powered_by_Banco_Central_%28Brazil%2C_2020%29.svg/2560px-Logo%E2%80%94pix_powered_by_Banco_Central_%28Brazil%2C_2020%29.svg.png" width="80" style="margin-bottom: 10px;">
@@ -328,25 +362,27 @@
 
     <script>
         // --- DATA ---
+        // Lista atualizada com novos produtos e categorias
         const products = [
+            // FRUTAS
             {
-                id: 1, name: "Jaca Dura Premium", price: 20.00, oldPrice: 25.00,
+                id: 1, category: 'frutas', name: "Jaca Dura Premium", price: 20.00, oldPrice: 25.00,
                 img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRav5c9icx32NBrS6E--h_GOloEZH_vZcvOf4VTc_zLxEPDLGHzHbi3VOw&s=10",
                 desc: "Jaca de ótima qualidade, gominhos crocantes e muito doces.",
-                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO621405100JMyqeB0Mz630473B5",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510JMyqeB0Mz630473B5",
                 pixLink: "https://nubank.com.br/cobrar/1ku07b/693b9dab-a751-438b-9db5-871e056167c6",
                 reviews: [{u: "Ricardo M.", s: 5, t: "Melhor jaca que já comi no Rio!"}, {u: "Ana P.", s: 4, t: "Muito boa, chegou bem geladinha."}]
             },
             {
-                id: 2, name: "Jaca Mole Selecionada", price: 20.00, oldPrice: 28.00,
+                id: 2, category: 'frutas', name: "Jaca Mole Selecionada", price: 20.00, oldPrice: 28.00,
                 img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZDNoz0ZN-3wuE8PQPN8oG0WK7dPcbTiCJ3J0w7eFIQbMMgBOyIKLJDss&s=10",
                 desc: "Textura cremosa, ideal para quem gosta de jaca bem madura.",
-                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO621405100JMyqeB0Mz630473B5",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510JMyqeB0Mz630473B5",
                 pixLink: "https://nubank.com.br/cobrar/1ku07b/693b9dab-a751-438b-9db5-871e056167c6",
                 reviews: [{u: "Marcos T.", s: 5, t: "Perfeita para comer de colher."}]
             },
             {
-                id: 3, name: "Saco com 10 Mangas Espada", price: 5.00, oldPrice: 12.00, promo: "PROMOÇÃO",
+                id: 3, category: 'frutas', name: "Saco com 10 Mangas Espada", price: 5.00, oldPrice: 12.00, promo: "PROMOÇÃO",
                 img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmYk_HY_3VmSD04r2F-Z-I526sAD60xgNzngZJNQnvj-FgsphJ8aI28dE&s=10",
                 desc: "Mangas espada selecionadas. Saco fechado com 10 unidades.",
                 pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc552040000530398654045.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510JDQ3sb0SN8630497E5",
@@ -354,7 +390,7 @@
                 reviews: [{u: "Carla S.", s: 5, t: "Pelo preço, a qualidade é absurda!"}, {u: "Pedro J.", s: 5, t: "Docinhas demais."}]
             },
             {
-                id: 4, name: "Saco com 20 Mangas Espada", price: 10.00, oldPrice: 20.00, promo: "MELHOR PREÇO",
+                id: 4, category: 'frutas', name: "Saco com 20 Mangas Espada", price: 10.00, oldPrice: 20.00, promo: "MELHOR PREÇO",
                 img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyA-o71zixhlPoztyYsnOp0qFhUggWxOUSZ2SE7iBqySzB73njOWh9kIw&s=10",
                 desc: "Combo família com 20 mangas espada. Super doces.",
                 pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510SdE6QFAylY63042B3C",
@@ -362,7 +398,7 @@
                 reviews: [{u: "Joana G.", s: 5, t: "Valeu muito a pena, vieram todas perfeitas."}]
             },
             {
-                id: 5, name: "Kit 2 Abacaxis Pérola", price: 5.00, oldPrice: 10.00, promo: "2 POR 5",
+                id: 5, category: 'frutas', name: "Kit 2 Abacaxis Pérola", price: 5.00, oldPrice: 10.00, promo: "2 POR 5",
                 img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJVQgq5FCLAQ7Ta4G2Qw9yVOljcMJM1wkHZCYhVxrq5GmKCtYhdyKAjWU&s=10",
                 desc: "Abacaxi Pérola bem maduro e doce. Direto do produtor.",
                 pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc552040000530398654045.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510JDQ3sb0SN8630497E5",
@@ -370,12 +406,64 @@
                 reviews: [{u: "Felipe L.", s: 5, t: "Melhor abacaxi da região!"}]
             },
             {
-                id: 6, name: "Combo 5 Abacaxis Pérola", price: 10.00, oldPrice: 25.00, promo: "OFERTA",
+                id: 6, category: 'frutas', name: "Combo 5 Abacaxis Pérola", price: 10.00, oldPrice: 25.00, promo: "OFERTA",
                 img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJVQgq5FCLAQ7Ta4G2Qw9yVOljcMJM1wkHZCYhVxrq5GmKCtYhdyKAjWU&s=10",
                 desc: "Ideal para sucos e sobremesas. 5 unidades grandes.",
                 pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510SdE6QFAylY63042B3C",
                 pixLink: "https://nubank.com.br/cobrar/1ku07b/693bb002-4b9b-4a28-9323-7cde9e373115",
                 reviews: [{u: "Beatriz R.", s: 4, t: "Muito bom, entregador foi super atencioso."}]
+            },
+            
+            // LANCHES
+            {
+                id: 7, category: 'lanches', name: "Combo X-Tudo + Fritas + Coca", price: 8.99, oldPrice: 15.00, promo: "MAIS VENDIDO",
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZO1VBMUMHn9eGI9G_u_OdzAtgvmYepiyU48x95_2_MLdotMEGy7lSDh4&s=10",
+                desc: "O Monstro: Pão, Carne Artesanal, Queijo, Presunto, Bacon Crocante, Calabresa, Ovo, Milho, Batata Palha, Alface e Tomate. Acompanha Batata Frita e Coca Lata gelada.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc552040000530398654048.995802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510KODuWMhuda6304494D",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f0d15-8123-490e-915d-226d2f82b169",
+                reviews: [{u: "Carlos D.", s: 5, t: "Lanche gigante, muito bom!"}]
+            },
+            {
+                id: 8, category: 'lanches', name: "Combo Família (4 X-Tudos)", price: 40.00, oldPrice: 60.00,
+                img: "https://instadelivery-public.nyc3.cdn.digitaloceanspaces.com/itens/172748960266f76642a0ea3_75_75.jpeg",
+                desc: "4 X-Tudos Completos + Batata turbinada com Cheddar e Bacon + Coca-Cola 2 Litros.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540540.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510FxoRw9aEOk63040AD5",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f0f6a-99f0-4f0f-9cd1-8118770adf70",
+                reviews: [{u: "Família Lima", s: 5, t: "Salvou o jantar de domingo."}]
+            },
+            {
+                id: 9, category: 'lanches', name: "Combo Triplo (3 X-Tudos)", price: 30.00, oldPrice: 45.00,
+                img: "https://i.pinimg.com/736x/6b/a4/06/6ba406cdd15435f89d298cc9fa317db7.jpg",
+                desc: "3 X-Tudos Completos + Batata turbinada com Cheddar e Bacon + Coca-Cola 2 Litros.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540530.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510S1bYk1Ok4963045C15",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f0f98-6e64-4b7e-b1b5-775ff29b248b",
+                reviews: [{u: "Jorge P.", s: 5, t: "Preço imbatível."}]
+            },
+
+            // BEBIDAS
+            {
+                id: 10, category: 'bebidas', name: "Combo Gin Eternity Maçã Verde", price: 10.00, oldPrice: 15.00,
+                img: "https://http2.mlstatic.com/D_Q_NP_971287-MLU75603105313_042024-O.webp",
+                desc: "Gin Eternity Sabor Maçã Verde (Dose Generosa) + 4 Gelos de Coco/Sabor.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510aISwX31Svy63040057",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f0fc3-43f7-4987-8014-66560fabd9da",
+                reviews: [{u: "Ana Clara", s: 5, t: "Delícia!"}]
+            },
+            {
+                id: 11, category: 'bebidas', name: "Combo Gin Melancia 900ml", price: 10.00, oldPrice: 18.00,
+                img: "https://carrefourbr.vtexassets.com/arquivos/ids/189722841/image-0.jpg?v=638796546367100000",
+                desc: "Gin Eternity Melancia 900ml + Energético Baly 2L + 4 Gelos de Coco.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510aISwX31Svy63040057",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f0fc3-43f7-4987-8014-66560fabd9da",
+                reviews: []
+            },
+            {
+                id: 12, category: 'bebidas', name: "Combo Gin Tropical 900ml", price: 10.00, oldPrice: 18.00,
+                img: "https://carrefourbr.vtexassets.com/arquivos/ids/189725102/image-0.jpg?v=638796548560370000",
+                desc: "Gin Eternity Tropical 900ml + Energético Baly 2L + 4 Gelos de Coco.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510aISwX31Svy63040057",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f0fc3-43f7-4987-8014-66560fabd9da",
+                reviews: []
             }
         ];
 
@@ -385,11 +473,19 @@
         let currentProduct = null;
         let currentQty = 1;
         let isWaitingPayment = false;
+        let activeCategory = 'todos'; // Controle de categoria
 
         // --- CORE FUNCTIONS ---
         function renderProducts(list = products) {
             const container = document.getElementById('product-list');
-            container.innerHTML = list.map(p => `
+            
+            // Filtra por categoria se não estiver em "todos"
+            let displayList = list;
+            if (activeCategory !== 'todos' && list === products) {
+                displayList = products.filter(p => p.category === activeCategory);
+            }
+
+            container.innerHTML = displayList.map(p => `
                 <div class="product-card" onclick="openProduct(${p.id})">
                     ${p.promo ? `<div class="promo-badge">${p.promo}</div>` : ''}
                     <div class="time-badge">🕒 35-45 min</div>
@@ -405,10 +501,31 @@
             `).join('');
         }
 
+        // Nova função para filtrar por categoria
+        function setCategory(cat, btnElement) {
+            activeCategory = cat;
+            
+            // Atualiza visual dos botões
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            
+            // Re-renderiza
+            renderProducts();
+            
+            // Atualiza título
+            const titles = { 'todos': 'Destaques 📍', 'frutas': 'Frutas Frescas 🍎', 'lanches': 'Lanches & Combos 🍔', 'bebidas': 'Bebidas Geladas 🍹' };
+            document.getElementById('section-title').innerText = titles[cat];
+        }
+
         function filterProducts(query) {
-            const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
-            renderProducts(filtered);
-            document.getElementById('section-title').innerText = query ? `Resultados para "${query}"` : "Destaques da Região 📍";
+            // Se houver busca, ignoramos temporariamente a categoria para buscar em tudo
+            if(query) {
+                const filtered = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+                renderProducts(filtered);
+                document.getElementById('section-title').innerText = `Resultados para "${query}"`;
+            } else {
+                renderProducts(); // Volta para a categoria atual
+            }
         }
 
         function openProduct(id) {
@@ -420,9 +537,9 @@
             document.getElementById('modal-current-price').innerText = `R$ ${currentProduct.price.toFixed(2)}`;
             document.getElementById('modal-desc').innerText = currentProduct.desc;
             document.getElementById('modal-qty').innerText = currentQty;
-            document.getElementById('obs-input').value = ""; // Limpa observação anterior
+            document.getElementById('obs-input').value = ""; 
             
-            document.getElementById('modal-reviews').innerHTML = currentProduct.reviews.map(r => `
+            document.getElementById('modal-reviews').innerHTML = currentProduct.reviews.length ? currentProduct.reviews.map(r => `
                 <div class="review-item">
                     <div class="review-header">
                         <span class="review-user">${r.u}</span>
@@ -430,7 +547,7 @@
                     </div>
                     <p style="color:#666; font-style:italic;">"${r.t}"</p>
                 </div>
-            `).join('');
+            `).join('') : '<p style="font-size:0.8rem; color:#999; font-style:italic;">Sem avaliações ainda.</p>';
 
             openModal('product-modal');
         }
@@ -615,7 +732,6 @@
 
             if(!name || !street || !num) return alert("Por favor, preencha Nome, Rua e Número.");
 
-            // Formata o endereço completo para salvar
             let fullAddr = `${street}, ${num}`;
             if(comp) fullAddr += ` - ${comp}`;
             if(ref) fullAddr += ` (${ref})`;
@@ -631,8 +747,6 @@
             renderProducts();
             const savedAddr = localStorage.getItem('iFrutasAddr');
             if(savedAddr) {
-                // Se já tem salvo, mostra resumido no header (pegando a primeira parte da string se for longa)
-                // Mas aqui vamos simplificar e mostrar "Seu Endereço" ou o salvo
                 document.getElementById('header-address').innerText = `📍 ${savedAddr.split(',')[0]}...`;
             }
             else {
@@ -640,7 +754,6 @@
             }
         };
 
-        // Estilos para animação spinner
         const style = document.createElement('style');
         style.innerHTML = `@keyframes spin { to { transform: rotate(360deg); } }`;
         document.head.appendChild(style);
