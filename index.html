@@ -208,6 +208,7 @@
 
     <div class="category-bar">
         <button class="cat-btn active" onclick="setCategory('todos', this)">Todos</button>
+        <button class="cat-btn" onclick="setCategory('natal', this)">Natal 🎄</button>
         <button class="cat-btn" onclick="setCategory('frutas', this)">Frutas</button>
         <button class="cat-btn" onclick="setCategory('lanches', this)">Lanches</button>
         <button class="cat-btn" onclick="setCategory('bebidas', this)">Bebidas</button>
@@ -464,6 +465,24 @@
                 pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510aISwX31Svy63040057",
                 pixLink: "https://nubank.com.br/cobrar/1ku07b/693f0fc3-43f7-4987-8014-66560fabd9da",
                 reviews: []
+            },
+
+            // NATAL (NOVOS ITENS)
+            {
+                id: 13, category: 'natal', name: "Chocotone De Nutella Bauducco", price: 5.00, oldPrice: 8.00, promo: "NATAL",
+                img: "https://www.estadao.com.br/resizer/v2/OVISJJ6NVRCV5GUVWDP57XCPAM.jpg?quality=80&auth=4b7c8a1f97a5374a9e07e5f7bf61378244b7e1fe8e23db412261a432c6031591&width=1200&height=1200&smart=true",
+                desc: "Delicioso Chocotone Bauducco com recheio especial de Nutella.",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc552040000530398654045.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510xNAJSlTv7C63046E7F",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f617b-9af8-4ef7-b34e-499d0318db29",
+                reviews: []
+            },
+            {
+                id: 14, category: 'natal', name: "Super Cesta de Natal", price: 20.00, oldPrice: 35.00, promo: "PRESENTE",
+                img: "https://www.monycestas.com.br/wp-content/uploads/2022/12/cesta-natal-sofisticada-fortaleza.jpeg",
+                desc: "Kit Festas: 2 Chocotones Nutella Bauducco + 1 Garrafa de Champanhe (1L).",
+                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510bU2RISlCJW630449CB",
+                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f61a1-d5e7-4f57-9ff1-b2233e9f087d",
+                reviews: []
             }
         ];
 
@@ -512,8 +531,8 @@
             // Re-renderiza
             renderProducts();
             
-            // Atualiza título
-            const titles = { 'todos': 'Destaques 📍', 'frutas': 'Frutas Frescas 🍎', 'lanches': 'Lanches & Combos 🍔', 'bebidas': 'Bebidas Geladas 🍹' };
+            // Atualiza título (Adicionado 'natal')
+            const titles = { 'todos': 'Destaques 📍', 'natal': 'Especial de Natal 🎄', 'frutas': 'Frutas Frescas 🍎', 'lanches': 'Lanches & Combos 🍔', 'bebidas': 'Bebidas Geladas 🍹' };
             document.getElementById('section-title').innerText = titles[cat];
         }
 
