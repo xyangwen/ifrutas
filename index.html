@@ -208,7 +208,6 @@
 
     <div class="category-bar">
         <button class="cat-btn active" onclick="setCategory('todos', this)">Todos</button>
-        <button class="cat-btn" onclick="setCategory('natal', this)">Natal 🎄</button>
         <button class="cat-btn" onclick="setCategory('frutas', this)">Frutas</button>
         <button class="cat-btn" onclick="setCategory('lanches', this)">Lanches</button>
         <button class="cat-btn" onclick="setCategory('bebidas', this)">Bebidas</button>
@@ -464,24 +463,6 @@
                 desc: "Gin Eternity Tropical 900ml + Energético Baly 2L + 4 Gelos de Coco.",
                 pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510aISwX31Svy63040057",
                 pixLink: "https://nubank.com.br/cobrar/1ku07b/693f0fc3-43f7-4987-8014-66560fabd9da",
-                reviews: []
-            },
-
-            // NATAL (NOVOS ITENS)
-            {
-                id: 13, category: 'natal', name: "Chocotone De Nutella Bauducco", price: 5.00, oldPrice: 8.00, promo: "NATAL",
-                img: "https://www.estadao.com.br/resizer/v2/OVISJJ6NVRCV5GUVWDP57XCPAM.jpg?quality=80&auth=4b7c8a1f97a5374a9e07e5f7bf61378244b7e1fe8e23db412261a432c6031591&width=1200&height=1200&smart=true",
-                desc: "Delicioso Chocotone Bauducco com recheio especial de Nutella.",
-                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc552040000530398654045.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510xNAJSlTv7C63046E7F",
-                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f617b-9af8-4ef7-b34e-499d0318db29",
-                reviews: []
-            },
-            {
-                id: 14, category: 'natal', name: "Super Cesta de Natal", price: 20.00, oldPrice: 35.00, promo: "PRESENTE",
-                img: "https://www.monycestas.com.br/wp-content/uploads/2022/12/cesta-natal-sofisticada-fortaleza.jpeg",
-                desc: "Kit Festas: 2 Chocotones Nutella Bauducco + 1 Garrafa de Champanhe (1L).",
-                pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510bU2RISlCJW630449CB",
-                pixLink: "https://nubank.com.br/cobrar/1ku07b/693f61a1-d5e7-4f57-9ff1-b2233e9f087d",
                 reviews: []
             }
         ];
@@ -778,5 +759,79 @@
         document.head.appendChild(style);
 
     </script>
+<script>
+/* =======================
+   ATUALIZAÇÃO DE PRODUTOS
+   NÃO ALTERA O HTML ORIGINAL
+======================= */
+
+products.push(
+    {
+        id: 100,
+        category: 'frutas',
+        name: "Promoção 3 Jacas",
+        price: 40.00,
+        oldPrice: 60.00,
+        promo: "3 POR 40$",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4fv_saCzdj0k7GTV6eKASEzP-l0qXS7cVdgsRgtrZ2AHi-ySJiv1KLCSc&s=10",
+        desc: "Promoção especial: leve 3 jacas por apenas 40$.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540540.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510ILYQ9IVciH63047550",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/695174a5-0db0-48fd-bb54-8fefa5fdf4f7",
+        reviews: []
+    },
+    {
+        id: 101,
+        category: 'lanches',
+        name: "Empadão de Frango",
+        price: 35.00,
+        oldPrice: 45.00,
+        img: "https://static.itdg.com.br/images/360-240/26a490ee2068beb6e6fa8ae43effabfb/260974-original.jpg",
+        desc: "Empadão de frango grande, bem recheado.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540535.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO621405103PqSmlFxxe630485A2",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/6951759a-6db8-4291-98ed-4669d0777173",
+        reviews: []
+    },
+    {
+        id: 102,
+        category: 'lanches',
+        name: "Empadão Médio",
+        price: 15.00,
+        oldPrice: 20.00,
+        img: "https://facabonito.com.br/wp-content/uploads/2025/09/Empadao-De-Frango-Cremoso-Na-Marmita.webp",
+        desc: "Empadão médio de frango, ideal para uma refeição rápida.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540515.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510sKJVWT8Z8Y63046DB8",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/6951763c-b1d0-4c5d-85e6-013abd07ff71",
+        reviews: []
+    },
+    {
+        id: 103,
+        category: 'frutas',
+        name: "Fruta Pão",
+        price: 5.00,
+        oldPrice: 8.00,
+        img: "https://cdn.awsli.com.br/600x700/2772/2772039/produto/375148700/fruta-p-o-1fqr789c5a.webp",
+        desc: "Fruta pão fresca.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc552040000530398654045.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510Xp01dAL3Tk6304FE94",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/695176f1-8395-4200-a1fa-559d75d4b82c",
+        reviews: []
+    },
+    {
+        id: 104,
+        category: 'frutas',
+        name: "3 Frutas Pão",
+        price: 10.00,
+        oldPrice: 15.00,
+        promo: "3 POR 10$",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROTJ96fKqwwtBdM2Em_mgXtY21Bj3h5BzzYzCO_45Qh1HgQDnjpZiWQ79x&s=10",
+        desc: "Combo com 3 frutas pão.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540510.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510VxVwzeugsk63048871",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/69517736-9a11-487f-ba40-f7b3c3c5c213",
+        reviews: []
+    }
+);
+
+// Re-render automático
+renderProducts();
+</script>
 </body>
 </html>
