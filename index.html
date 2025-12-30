@@ -833,5 +833,323 @@ products.push(
 // Re-render automático
 renderProducts();
 </script>
+<script>
+/* ==========================================
+   ATUALIZAÇÃO DE NOVOS PRODUTOS (FEIRA)
+   Cole isso antes de fechar o </body>
+   ========================================== */
+
+products.push(
+    {
+        id: 105,
+        category: 'frutas',
+        name: "Tamarindo 1Kg",
+        price: 15.00,
+        oldPrice: 22.00,
+        img: "https://previews.123rf.com/images/engdao/engdao1903/engdao190300958/118859167-ripe-of-tamarind-fruit-in-plastic-bag-package-for-sale-in-market-fresh-sweet-tamarinds-harvest.jpg",
+        desc: "Tamarindo fresco e azedinho, pacote com 1kg.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540515.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510KDdywkA3ay6304578C",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/695312af-d571-4a41-970c-b00177138784",
+        reviews: []
+    },
+    {
+        id: 106,
+        category: 'frutas',
+        name: "Ovo de Pato Verde (10 Unid)",
+        price: 15.00,
+        oldPrice: 20.00,
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCE9K5Dq8cRbXdmutU_sEe7Oeoy6tmF7KaiZDe3N5Nkg&s=10",
+        desc: "Ovos de pato verde selecionados, caixa com 10 unidades.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540515.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO62140510KDdywkA3ay6304578C",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/695312af-d571-4a41-970c-b00177138784",
+        reviews: []
+    },
+    {
+        id: 107,
+        category: 'frutas',
+        name: "Pitaya Vermelha (5 Unid)",
+        price: 20.00,
+        oldPrice: 35.00,
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAcWrwJM74Kc4Vzn3U93wSHmxows3hAobPVp8HTSYAQg&s=10",
+        desc: "Pitaya vermelha doce e suculenta. Kit com 5 unidades.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO621405108m8doNCzxo6304A7C6",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/695313a2-48c4-44aa-8507-41160f75611c",
+        reviews: []
+    },
+    {
+        id: 108,
+        category: 'frutas',
+        name: "Pitaya Branca (5 Unid)",
+        price: 20.00,
+        oldPrice: 35.00,
+        img: "https://diariodonordeste.verdesmares.com.br/image/contentid/policy:1.3159788:1636999897/Pitaya-amarela.jpg?f=default&$p$f=5ac7c7d",
+        desc: "Pitaya de polpa branca. Kit com 5 unidades.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO621405108m8doNCzxo6304A7C6",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/695313a2-48c4-44aa-8507-41160f75611c",
+        reviews: []
+    },
+    {
+        id: 109,
+        category: 'frutas',
+        name: "Lichia (1kg)",
+        price: 20.00,
+        oldPrice: 30.00,
+        img: "https://s2-casaejardim.glbimg.com/iDr1oW7QpavGte2bAYHcxHmO8Kw=/0x0:1058x1062/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_a0b7e59562ef42049f4e191fe476fe7d/internal_photos/bs/2025/r/j/d4AT7NRyCZfuAoZgkzFw/lichia-com-caroco-a-mostra-toptropicals.com-wikimedia-.jpg",
+        desc: "Lichia fresca, pacote com 1kg.",
+        pixCode: "00020126580014BR.GOV.BCB.PIX01361c729f04-a046-4310-bdf5-1ead5d34bfc5520400005303986540520.005802BR5925Wendel dos Santos Oliveir6009SAO PAULO621405108m8doNCzxo6304A7C6",
+        pixLink: "https://nubank.com.br/cobrar/1ku07b/695313a2-48c4-44aa-8507-41160f75611c",
+        reviews: []
+    }
+);
+
+// Atualiza a tela automaticamente
+renderProducts();
+</script>
+<script>
+/* =============================================================
+   MÓDULO DE DESTAQUES TIPO IFOOD (CARROSSEL)
+   Adiciona banners deslizantes no topo da loja
+   ============================================================= */
+
+(function createBanners() {
+    // 1. INJETAR O ESTILO CSS DOS BANNERS
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .banner-carousel {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 0 20px 0; /* Espaço para a sombra não cortar */
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; /* Rolagem suave no iOS */
+            scrollbar-width: none; /* Esconde barra no Firefox */
+        }
+        .banner-carousel::-webkit-scrollbar { display: none; /* Esconde barra no Chrome */ }
+        
+        .banner-item {
+            min-width: 85%; /* Ocupa 85% da tela para mostrar que tem mais ao lado */
+            height: 150px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            scroll-snap-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .banner-item:active { transform: scale(0.97); }
+        
+        .banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Garante que a imagem preencha sem esticar */
+        }
+
+        /* Ajuste para telas maiores (PC) */
+        @media(min-width: 768px) {
+            .banner-item { min-width: 400px; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 2. CRIAR O HTML DOS BANNERS
+    const bannerContainer = document.createElement('div');
+    bannerContainer.className = 'banner-carousel';
+
+    // Lista de Banners
+    const bannersData = [
+        {
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ56Np7VgRBUCaw8oERsvJUog9r5U0g58-NFLD4IPsqQVJcSI-gikWcmiXY&s=10",
+            action: "openProduct(7)", // Abre o Combo X-Tudo (ID 7)
+            alt: "Oferta do Dia"
+        },
+        {
+            img: "https://www.olimpiaminhacidade.com.br/uploads/images/2024/09/super-ofertas-do-hortifruti-proenca-supermercados-85bb2.png",
+            action: "triggerCategory('frutas')", // Vai para Frutas
+            alt: "Ofertas de Frutas"
+        },
+        {
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo65FpdBAHbQ7mVRIBkG4m-33HtWCI5MMM0NGnyTIuj-c615gnCahlCsaT&s=10",
+            action: "triggerCategory('lanches')", // Vai para Lanches
+            alt: "Promoção Empadão"
+        }
+    ];
+
+    // Gerar o HTML de cada banner
+    bannerContainer.innerHTML = bannersData.map(b => `
+        <div class="banner-item" onclick="${b.action}">
+            <img src="${b.img}" class="banner-img" alt="${b.alt}">
+        </div>
+    `).join('');
+
+    // 3. INSERIR NO LOCAL CORRETO (Dentro do <main>, antes do título)
+    const mainSection = document.querySelector('main.container');
+    const titleSection = document.getElementById('section-title');
+    
+    if (mainSection && titleSection) {
+        mainSection.insertBefore(bannerContainer, titleSection);
+    }
+})();
+
+// Função auxiliar para simular o clique nos botões de categoria existentes
+function triggerCategory(catName) {
+    // Encontra o botão correto baseado no texto do onclick original
+    const buttons = document.querySelectorAll('.cat-btn');
+    let targetBtn = null;
+
+    buttons.forEach(btn => {
+        if(btn.getAttribute('onclick').includes(`'${catName}'`)) {
+            targetBtn = btn;
+        }
+    });
+
+    if(targetBtn) {
+        // Chama a função original passando o botão encontrado
+        setCategory(catName, targetBtn);
+        // Rola a página suavemente até os produtos
+        document.getElementById('product-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+</script>
+<script>
+/* =============================================================
+   DESTAQUE "CHAMATIVO" DA JACA DURA
+   Insere um banner animado logo abaixo do carrossel
+   ============================================================= */
+
+(function createJacaHighlight() {
+    // 1. CSS DO DESTAQUE (Gradiente, Animação de Pulso e Sombra)
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes pulseBorder {
+            0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 87, 34, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
+        }
+
+        .jaca-highlight {
+            background: linear-gradient(135deg, #ff5722, #ff9800);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: pulseBorder 2s infinite; /* Efeito pulsante */
+            transform: scale(1);
+            transition: transform 0.2s;
+        }
+
+        .jaca-highlight:active { transform: scale(0.98); }
+
+        /* Círculo branco atrás da imagem */
+        .jaca-img-container {
+            width: 90px; height: 90px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center; justify-content: center;
+            border: 3px solid #ffe0b2;
+            flex-shrink: 0;
+        }
+
+        .jaca-img-highlight {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .jaca-info h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            font-weight: 900;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            line-height: 1.1;
+        }
+
+        .jaca-tag {
+            background: #fff;
+            color: #d84315;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .jaca-btn {
+            margin-top: 8px;
+            background: #fff;
+            color: #d84315;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Brilho passando na tela */
+        .shine {
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            animation: shineMove 3s infinite;
+        }
+
+        @keyframes shineMove {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 2. HTML DO CARD
+    const highlightCard = document.createElement('div');
+    highlightCard.className = 'jaca-highlight';
+    // ID 1 é a Jaca Dura Premium conforme seu código
+    highlightCard.setAttribute('onclick', 'openProduct(1)'); 
+    
+    highlightCard.innerHTML = `
+        <div class="shine"></div>
+        <div class="jaca-img-container">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRav5c9icx32NBrS6E--h_GOloEZH_vZcvOf4VTc_zLxEPDLGHzHbi3VOw&s=10" class="jaca-img-highlight">
+        </div>
+        <div class="jaca-info">
+            <span class="jaca-tag">🔥 A MAIS VENDIDA</span>
+            <h3>Jaca Dura Premium</h3>
+            <p style="font-size: 0.85rem; margin-top: 4px; opacity: 0.95;">Amarelinha, crocante e super doce. Chegou hoje!</p>
+            <button class="jaca-btn">Pedir Agora 🛒</button>
+        </div>
+    `;
+
+    // 3. INSERIR NO LOCAL CORRETO
+    // Tenta inserir logo após o carrossel de banners criado no script anterior
+    const bannerCarousel = document.querySelector('.banner-carousel');
+    const mainContainer = document.querySelector('main.container');
+    const sectionTitle = document.getElementById('section-title');
+
+    if (bannerCarousel && bannerCarousel.parentNode) {
+        // Se o banner existe, coloca DEPOIS dele
+        bannerCarousel.parentNode.insertBefore(highlightCard, bannerCarousel.nextSibling);
+    } else if (mainContainer && sectionTitle) {
+        // Se não tiver banner, coloca antes do título da lista
+        mainContainer.insertBefore(highlightCard, sectionTitle);
+    }
+})();
+</script>
+
 </body>
 </html>
